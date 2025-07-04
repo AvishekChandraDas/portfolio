@@ -8,7 +8,8 @@ import {
     html,
     css,
     git,
-    figma,
+    maisha,
+    quan,
     oerwf,
     python,
     c,
@@ -51,6 +52,10 @@ import {
     {
       title: "App Developer",
       icon: web,
+    },
+    {
+      title: "QC Enthusiast",
+      icon: quan,
     },
     {
       title: "AI/ML Developer",
@@ -112,10 +117,6 @@ import {
       icon: git,
     },
     {
-      name: "figma",
-      icon: figma,
-    },
-    {
       name: "LaTeX",
       icon: latex,
     },
@@ -145,6 +146,13 @@ import {
       designation: "Full-Stack Web Developer",
       company: "CrevoSys",
       image: jenifa
+    },
+    {
+      testimonial: "Avishek is one of the most hardworking and sincere people I know. He takes his responsibilities seriously and always puts in genuine effort, no matter how big or small the task is. What stands out most is his dedication,he doesn't give up easily and is always willing to learn and improve. He's not just reliable, but also someone who brings a positive energy to any team or environment. I truly believe he'll do well in whatever he sets his mind to.",
+      name: "Farhana Maisha Chowdhury",
+      designation: "CSE Undergraduate",
+      company: "Metropolitan University",
+      image: maisha
     },
     {
       testimonial: "During my time working with Avishek, I’ve come to truly admire his talent and dedication. Despite being my batchmate and of the same age, he stands out with his skills in artificial intelligence, machine learning and Python development. He consistently delivers high-quality work. It’s been a great experience collaborating with him, especially during the Hult Prize journey.",
