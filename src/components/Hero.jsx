@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
+import { lazy, Suspense } from 'react';
 
 import { styles } from '../styles';
-import { QuantumComputingCanvas } from './canvas';
+
+// Lazy load the quantum computing canvas for better performance
+const QuantumComputingCanvas = lazy(() => import('./canvas/QuantumComputing'));
 
 const Hero = () => {
   return (
@@ -20,7 +23,16 @@ const Hero = () => {
         </div>
       </div>
 
-      <QuantumComputingCanvas />
+      <Suspense fallback={
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="text-center text-white">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#5fcecc] mx-auto mb-4"></div>
+            <p className="text-sm opacity-70">Loading 3D Visualization...</p>
+          </div>
+        </div>
+      }>
+        <QuantumComputingCanvas />
+      </Suspense>
 
       <div className='absolute xs:bottom-10 bottom-32 w-full flex justify-center item-center'>
         <a href="#about">

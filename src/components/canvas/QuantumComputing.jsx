@@ -3,6 +3,8 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Preload, Sphere, Text, Trail } from '@react-three/drei';
 import * as THREE from 'three';
 import CanvasLoader from '../Loader';
+import ErrorBoundary from './ErrorBoundary';
+import StaticQuantumFallback from './StaticQuantumFallback';
 
 // Quantum bit visualization
 const Qubit = ({ position, color, speed = 1 }) => {
@@ -374,8 +376,45 @@ const QuantumComputing = ({ isMobile }) => {
     }
   });
 
+  // Ultra-simplified mobile version
+  if (isMobile) {
+    return (
+      <group ref={groupRef} position={[0, -1, 0]} scale={0.8}>        
+        {/* Only 2 central qubits for mobile */}
+        <Qubit position={[0, 0, 0]} color="#00ffff" speed={1} />
+        <Qubit position={[0, 1, 0]} color="#ff00ff" speed={0.8} />
+        
+        {/* Simple connection line */}
+        <mesh position={[0, 0.5, 0]}>
+          <cylinderGeometry args={[0.02, 0.02, 1, 8]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
+        </mesh>
+        
+        {/* Minimal floating particles for mobile */}
+        {Array.from({ length: 5 }, (_, i) => {
+          const angle = (i / 5) * Math.PI * 2;
+          const radius = 2;
+          return (
+            <FloatingParticle 
+              key={i}
+              position={[
+                Math.cos(angle) * radius, 
+                0, 
+                Math.sin(angle) * radius
+              ]}
+              color="#5fcecc"
+              size={0.05}
+              speed={0.3}
+            />
+          );
+        })}
+      </group>
+    );
+  }
+
+  // Full desktop version
   return (
-    <group ref={groupRef} position={[0, -1, 0]} scale={isMobile ? 0.7 : 1}>
+    <group ref={groupRef} position={[0, -1, 0]} scale={1}>
       {/* Ambient lighting */}
       <ambientLight intensity={0.3} />
       <pointLight position={[10, 10, 10]} intensity={1} />
@@ -484,68 +523,121 @@ const QuantumComputing = ({ isMobile }) => {
 
 const QuantumComputingCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isWebGLSupported, setIsWebGLSupported] = useState(true);
+  const [isLowEndDevice, setIsLowEndDevice] = useState(false);
 
   useEffect(() => {
+    // Enhanced mobile detection
     const mediaQuery = window.matchMedia("(max-width: 800px)");
-    setIsMobile(mediaQuery.matches);
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    setIsMobile(mediaQuery.matches || isMobileDevice || isTouchDevice);
+
+    // Check for low-end devices
+    const isOldAndroid = /android [1-4]/i.test(userAgent);
+    const isOldIOS = /os [1-9]_/i.test(userAgent);
+    const hasLowMemory = navigator.deviceMemory && navigator.deviceMemory < 2;
+    const hasSlowConnection = navigator.connection && (navigator.connection.effectiveType === 'slow-2g' || navigator.connection.effectiveType === '2g');
+    
+    setIsLowEndDevice(isOldAndroid || isOldIOS || hasLowMemory || hasSlowConnection);
 
     const handleMediaQueryChange = (event) => {
-      setIsMobile(event.matches);
+      setIsMobile(event.matches || isMobileDevice || isTouchDevice);
     };
 
     mediaQuery.addEventListener("change", handleMediaQueryChange);
+
+    // Check WebGL support
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      setIsWebGLSupported(!!gl);
+      
+      // Additional WebGL capability check
+      if (gl) {
+        const renderer = gl.getParameter(gl.RENDERER);
+        const vendor = gl.getParameter(gl.VENDOR);
+        
+        // Check for software rendering or very old GPUs
+        if (renderer && (renderer.includes('Software') || renderer.includes('Mesa'))) {
+          setIsLowEndDevice(true);
+        }
+      }
+    } catch (e) {
+      setIsWebGLSupported(false);
+    }
 
     return () => {
       mediaQuery.removeEventListener("change", handleMediaQueryChange);
     };
   }, []);
 
+  // Fallback for no WebGL support or very low-end devices
+  if (!isWebGLSupported || isLowEndDevice) {
+    return <StaticQuantumFallback />;
+  }
+
   return (
-    <Canvas
-      frameloop='always'
-      shadows
-      camera={{ position: [0, 0, 12], fov: 60 }}
-      gl={{ 
-        preserveDrawingBuffer: true,
-        antialias: true,
-        alpha: true 
-      }}
-      style={{ background: 'transparent' }}
-    >
-      <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls 
-          enableZoom={false} 
-          maxPolarAngle={Math.PI / 1.8} 
-          minPolarAngle={Math.PI / 3}
-          enablePan={false}
-          autoRotate={true}
-          autoRotateSpeed={0.3}
-          enableDamping={true}
-          dampingFactor={0.05}
-        />
-        
-        {/* Enhanced lighting setup */}
-        <ambientLight intensity={0.2} />
-        <directionalLight position={[10, 10, 5]} intensity={1} color="#ffffff" />
-        <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#4ecdc4" />
-        <pointLight position={[0, 10, 0]} intensity={0.8} color="#ff00ff" />
-        <pointLight position={[0, -10, 0]} intensity={0.6} color="#ffff00" />
-        <spotLight 
-          position={[5, 5, 5]} 
-          angle={0.3} 
-          penumbra={0.5} 
-          intensity={0.8} 
-          color="#00ffff" 
-        />
-        
-        {/* Fog for depth */}
-        <fog attach="fog" args={['#000011', 8, 25]} />
-        
-        <QuantumComputing isMobile={isMobile} />
-        
-        <Preload all />
-      </Suspense>
-    </Canvas>
+    <ErrorBoundary>
+      <Canvas
+        frameloop='always'
+        shadows={!isMobile}
+        camera={{ position: [0, 0, isMobile ? 8 : 12], fov: isMobile ? 75 : 60 }}
+        gl={{ 
+          preserveDrawingBuffer: true,
+          antialias: !isMobile,
+          alpha: true,
+          powerPreference: isMobile ? 'low-power' : 'high-performance'
+        }}
+        style={{ background: 'transparent' }}
+        onCreated={({ gl }) => {
+          // Additional mobile optimizations
+          if (isMobile) {
+            gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          }
+        }}
+      >
+        <Suspense fallback={<CanvasLoader />}>
+          <OrbitControls 
+            enableZoom={false} 
+            maxPolarAngle={Math.PI / 1.8} 
+            minPolarAngle={Math.PI / 3}
+            enablePan={false}
+            autoRotate={true}
+            autoRotateSpeed={isMobile ? 0.1 : 0.3}
+            enableDamping={true}
+            dampingFactor={0.05}
+          />
+          
+          {/* Adaptive lighting setup */}
+          <ambientLight intensity={isMobile ? 0.4 : 0.2} />
+          <directionalLight position={[10, 10, 5]} intensity={isMobile ? 0.8 : 1} color="#ffffff" />
+          {!isMobile && (
+            <>
+              <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#4ecdc4" />
+              <pointLight position={[0, 10, 0]} intensity={0.8} color="#ff00ff" />
+              <pointLight position={[0, -10, 0]} intensity={0.6} color="#ffff00" />
+              <spotLight 
+                position={[5, 5, 5]} 
+                angle={0.3} 
+                penumbra={0.5} 
+                intensity={0.8} 
+                color="#00ffff" 
+              />
+            </>
+          )}
+          
+          {/* Fog for depth - reduced on mobile */}
+          <fog attach="fog" args={['#000011', isMobile ? 5 : 8, isMobile ? 15 : 25]} />
+          
+          <QuantumComputing isMobile={isMobile} />
+          
+          <Preload all />
+        </Suspense>
+      </Canvas>
+    </ErrorBoundary>
   );
 };
 
