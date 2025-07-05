@@ -1,12 +1,14 @@
 {
-  "name": "Avishek Chandra Das - Portfolio",
-  "short_name": "Avishek Portfolio",
-  "description": "Computer Science & Engineering student specializing in Quantum Computing, AI/ML, and Full-Stack Development",
+  "name": "Avishek Chandra Das - Computer Science Portfolio | Metropolitan University",
+  "short_name": "Avishek Das Portfolio",
+  "description": "Computer Science & Engineering student at Metropolitan University from Sylhet, Bangladesh. Expert in Quantum Computing, AI/ML, and Full-Stack Development.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000011",
   "theme_color": "#5fcecc",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "id": "avishek-portfolio",
   "icons": [
     {
       "src": "/src/assets/sqlogo.png",
@@ -21,7 +23,7 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["education", "portfolio", "technology"],
+  "categories": ["education", "portfolio", "technology", "developer", "computer-science"],
   "lang": "en",
   "dir": "ltr"
 }
