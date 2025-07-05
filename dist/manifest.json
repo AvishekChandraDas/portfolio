@@ -1,0 +1,27 @@
+{
+  "name": "Avishek Chandra Das - Portfolio",
+  "short_name": "Avishek Portfolio",
+  "description": "Computer Science & Engineering student specializing in Quantum Computing, AI/ML, and Full-Stack Development",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000011",
+  "theme_color": "#5fcecc",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/src/assets/sqlogo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/src/assets/sqlogo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "portfolio", "technology"],
+  "lang": "en",
+  "dir": "ltr"
+}

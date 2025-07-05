@@ -8,19 +8,45 @@ const QuantumComputingCanvas = lazy(() => import('./canvas/QuantumComputing'));
 
 const Hero = () => {
   return (
-    <section className='relative w-full h-screen mx-auto'>
+    <section className='relative w-full h-screen mx-auto' aria-label="Hero Section - Avishek Chandra Das Introduction">
+      {/* Schema.org structured data for the hero section */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Avishek Chandra Das",
+          "jobTitle": "Computer Science Student & Software Developer",
+          "description": "Computer Science & Engineering student at Metropolitan University, specializing in Quantum Computing and AI/ML",
+          "url": "https://avishekchandradas.me",
+          "image": "https://avishekchandradas.me/assets/logo-DtOzpCOJ.png",
+          "alumniOf": {
+            "@type": "EducationalOrganization",
+            "name": "Metropolitan University"
+          },
+          "knowsAbout": ["Quantum Computing", "AI/ML", "Full Stack Development"],
+          "sameAs": [
+            "https://github.com/AvishekChandraDas",
+            "https://linkedin.com/in/avishekchandradas"
+          ]
+        })}
+      </script>
+      
       <div className={`${styles.paddingX} absolute inset-0 top-[120px] max-w-7xl mx-auto flex flex-row items-start gap-5`}>
-        <div className='flex flex-col justify-center items-center mt-5'>
+        <div className='flex flex-col justify-center items-center mt-5' aria-hidden="true">
           <div className='w-5 h-5 rounded-full bg-[#5fcecc]' />
           <div className='w-1 sm:h-80 h-40 blue-gradient' />
         </div>
 
-        <div>
-          <h1 className={`${styles.heroHeadText} text-white`}>Hi, I'm <span className='text-[#5fcecc]'>Avishek</span></h1>
-          <p className={`${styles.heroSubText} mt-2 text-white-100`}>Computer Science & Engineering @ Metropoliton University
-            <br className='sm:block hidden' /> Quantum Computing & AI/ML Enthusiast  
+        <header>
+          <h1 className={`${styles.heroHeadText} text-white`}>
+            Hi, I'm <span className='text-[#5fcecc]'>Avishek</span>
+          </h1>
+          <p className={`${styles.heroSubText} mt-2 text-white-100`}>
+            Computer Science & Engineering @ Metropolitan University
+            <br className='sm:block hidden' /> 
+            Quantum Computing & AI/ML Enthusiast  
           </p>
-        </div>
+        </header>
       </div>
 
       <Suspense fallback={
@@ -35,7 +61,7 @@ const Hero = () => {
       </Suspense>
 
       <div className='absolute xs:bottom-10 bottom-32 w-full flex justify-center item-center'>
-        <a href="#about">
+        <a href="#about" aria-label="Scroll to About section">
           <div className='w-[35px] h-[64px] rounded-3xl border-4 border-secondary flex justify-center items-start p-2'>
             <motion.div 
               animate={{y: [0, 24, 0]}} 
@@ -45,6 +71,7 @@ const Hero = () => {
                 repeatType: 'loop',
               }}
               className='w-3 h-3 bg-secondary rounded-full mb-1'
+              aria-hidden="true"
             />
           </div>
         </a>

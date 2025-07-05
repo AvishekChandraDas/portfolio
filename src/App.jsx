@@ -1,24 +1,97 @@
 import { BrowserRouter } from "react-router-dom";
 import { About, Contact, Experience, Feedbacks, Hero, Navbar, Tech, Works, StarsCanvas } from "./components";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import Analytics from "./components/Analytics";
+
+// SEO Component for dynamic meta tags
+const SEOHead = () => {
+  useEffect(() => {
+    // Dynamic title updates based on scroll position
+    const updateTitle = () => {
+      const scrollY = window.scrollY;
+      const sections = [
+        { offset: 0, title: "Avishek Chandra Das - Computer Science & Quantum Computing Expert" },
+        { offset: 800, title: "About Avishek - CS Student & Developer" },
+        { offset: 1600, title: "Experience - Avishek's Professional Journey" },
+        { offset: 2400, title: "Tech Stack - Avishek's Technical Skills" },
+        { offset: 3200, title: "Projects - Avishek's Portfolio Work" },
+        { offset: 4000, title: "Contact Avishek - Let's Connect" }
+      ];
+      
+      const currentSection = sections.reverse().find(section => scrollY >= section.offset);
+      if (currentSection) {
+        document.title = currentSection.title;
+      }
+    };
+
+    const handleScroll = () => {
+      requestAnimationFrame(updateTitle);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return null;
+};
 
 const App = () => {
   return (
     <BrowserRouter>
+      <SEOHead />
+      <Analytics />
       <div className="relative z-0 bg-primary">
+        {/* Schema.org structured data for better SEO */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Avishek Chandra Das Portfolio",
+            "url": "https://avishekchandradas.me",
+            "author": {
+              "@type": "Person",
+              "name": "Avishek Chandra Das",
+              "jobTitle": "Computer Science Student & Software Developer",
+              "description": "Quantum Computing and AI/ML enthusiast with expertise in full-stack development"
+            },
+            "description": "Portfolio website showcasing projects and expertise in Computer Science, Quantum Computing, AI/ML, and Full-Stack Development",
+            "keywords": "Avishek Chandra Das, Computer Science, Quantum Computing, AI, Machine Learning, Portfolio",
+            "inLanguage": "en-US"
+          })}
+        </script>
+        
         <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center"> 
           <Navbar />
-          <Hero />
+          <main>
+            <Hero />
+          </main>
         </div>
 
-        <About />
-        <Experience />
-        <Tech />
-        <Works />
-        {<Feedbacks />}
+        <section id="about" aria-label="About Avishek">
+          <About />
+        </section>
+        
+        <section id="experience" aria-label="Professional Experience">
+          <Experience />
+        </section>
+        
+        <section id="tech" aria-label="Technical Skills">
+          <Tech />
+        </section>
+        
+        <section id="works" aria-label="Portfolio Projects">
+          <Works />
+        </section>
+        
+        <section id="feedbacks" aria-label="Client Testimonials">
+          <Feedbacks />
+        </section>
         
         <div className="relative z-0">
-          <Contact />
+          <section id="contact" aria-label="Contact Information">
+            <Contact />
+          </section>
           <StarsCanvas />
         </div>
 
