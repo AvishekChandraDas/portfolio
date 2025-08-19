@@ -53,6 +53,7 @@ import metro from './company/metro.png';
 // Project assets
 import micai from './projects/micai.png';
 import oerwf from './projects/oerwf.png';
+import vrs from './projects/vrs.png';
 
 // Testimonial assets
 import bmale from './testimonials/bmale.jpeg';
@@ -117,4 +118,5 @@ export {
   jenifa,
   chaity,
   maisha,
+  vrs,
 };
