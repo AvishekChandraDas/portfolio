@@ -1,4 +1,3 @@
-import { o } from "maath/dist/index-0332b2ed.esm";
 import {
     mobile,
     backend,
@@ -27,6 +26,7 @@ import {
     chaity,
     bmale,
     bfemale,
+    vrs,
   } from "../assets";
 
   export const navLinks = [
@@ -193,6 +193,27 @@ import {
       image: micai,
       source_code_link: "https://bongo--find.web.app",
       github_link: "https://github.com/avishekchandradas/bongofind", // Add your actual GitHub repo
+    },
+    {
+      name: "Vehicle Rental System - JAVA Swing Project",
+      description:
+        "A comprehensive desktop application for managing vehicle rentals built with Java and Swing. This system provides an intuitive interface for both users and administrators to handle vehicle bookings, user management, and rental operations.",
+        tags: [
+          {
+            name: "JAVA",
+            color: "blue-text-gradient",
+          },
+        {
+          name: "JAVA-Swing",
+          color: "green-text-gradient",
+        },
+        {
+          name: "SQLite",
+          color: "pink-text-gradient",
+        },
+      ],
+      image: vrs,
+      github_link: "https://github.com/AvishekChandraDas/Vehicle_Rental_System", // Add your actual GitHub repo
     },
     {
       name: "MU RoomRadar",

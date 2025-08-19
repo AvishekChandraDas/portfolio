@@ -3,8 +3,15 @@ import { useEffect } from 'react';
 // Google Analytics and SEO tracking
 const Analytics = () => {
   useEffect(() => {
-    // Google Analytics 4 (replace GA_MEASUREMENT_ID with your actual ID)
-    const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // Replace with your Google Analytics ID
+    // TODO: Replace with your actual Google Analytics 4 Measurement ID
+    // Get your ID from: https://analytics.google.com
+    const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // 🔥 REPLACE THIS WITH YOUR ACTUAL GA4 ID
+    
+    // Only load Analytics if we have a real ID (not placeholder)
+    if (GA_MEASUREMENT_ID === 'G-XXXXXXXXXX') {
+      console.log('⚠️ Google Analytics not configured. Please add your GA4 Measurement ID in src/components/Analytics.jsx');
+      return;
+    }
     
     // Load Google Analytics
     const script = document.createElement('script');
@@ -19,7 +26,13 @@ const Analytics = () => {
     gtag('config', GA_MEASUREMENT_ID, {
       page_title: document.title,
       page_location: window.location.href,
+      // Enhanced privacy settings
+      anonymize_ip: true,
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false
     });
+    
+    console.log('✅ Google Analytics loaded successfully with ID:', GA_MEASUREMENT_ID);
     
     // Track page views and custom events
     const trackPageView = () => {
